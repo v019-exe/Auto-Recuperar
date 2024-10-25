@@ -142,7 +142,7 @@ autorecovery() {
                   if [$? -eq 0 ]; then
                     echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
                     echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
-                    sudo scalpel "$ruta" -o /home/usuario/recuperados
+                    sudo scalpel "$ruta" -o ./recovery
                     if [ $? -eq 0 ]; then
                       echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Comprueba si se han recuperado los archivos en ./recovery"
                     else
