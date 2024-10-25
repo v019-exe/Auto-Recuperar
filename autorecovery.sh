@@ -139,7 +139,8 @@ autorecovery() {
                   echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Iniciando la recuperación"
                   echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Creando la carpeta de archivos recuperados"
                   mkdir ./recovery
-                  if [ $? -eq 0 ]; then
+                  process=$?
+                  if [ $process -eq 0 ]; then
                     echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
                     echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
                     sudo scalpel "$ruta" -o ./recovery
