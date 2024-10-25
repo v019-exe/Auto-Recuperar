@@ -129,7 +129,7 @@ autorecovery() {
             if [ $? -eq 0 ]; then
               echo -e "[DISK UMOUNT SUCCESS][$(date +"%H:%M:%S")]: El disco ha sido desmontado correctamente"
               echo -e "[CONFIG][$(date +"%H:%M:%S")]: Configurando scapel..."
-              echo "txt     y       100000" | sudo tee -a /etc/scalpel/scalpel.conf
+              echo "txt     y       100000" | sudo tee -a /etc/scalpel.conf
               if [ $? -eq 0 ]; then
                 echo -e "[CONFIG SUCCESS][$(date +"%H:%M:%S")]: Se ha configurado correctamente"
                 echo -e "[CONFIG][$(date +"%H:%M:%S")]: Verificando si se ha configurado correctamente"
