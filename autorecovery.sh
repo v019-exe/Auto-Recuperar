@@ -130,6 +130,7 @@ autorecovery() {
               echo -e "[DISK UMOUNT SUCCESS][$(date +"%H:%M:%S")]: El disco ha sido desmontado correctamente"
               echo -e "[CONFIG][$(date +"%H:%M:%S")]: Configurando scapel..."
               echo -e "[CONFIG][$(date +"%H:%M:%S")]: Comprobando si se configuró previamente scalpel"
+              linea="txt     y       100000    \x54\x65\x78\x74\x00    \x54\x65\x78\x74\x00"
               if ! grep -Fxq "$linea" /etc/scalpel.conf; then
                 echo -e "[CONFIG][$(date +"%H:%M:%S")]: No se configuró anteriormente, añadiendo la configuración"
                 echo "$linea" | sudo tee -a /etc/scalpel.conf
@@ -173,7 +174,7 @@ autorecovery() {
                   echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
                   echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
                   
-                  sudo scalpel "$ruta" -o ./recovery
+                  sudo scalpel -c /etc/scalpel.conf "$ruta" -o ./recovery
                   if [ $? -eq 0 ]; then
                     echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Comprueba si se han recuperado los archivos en ./recovery"
                   else
