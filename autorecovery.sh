@@ -129,37 +129,60 @@ autorecovery() {
             if [ $? -eq 0 ]; then
               echo -e "[DISK UMOUNT SUCCESS][$(date +"%H:%M:%S")]: El disco ha sido desmontado correctamente"
               echo -e "[CONFIG][$(date +"%H:%M:%S")]: Configurando scapel..."
-              echo "txt     y       100000" | sudo tee -a /etc/scalpel.conf
-              if [ $? -eq 0 ]; then
-                echo -e "[CONFIG SUCCESS][$(date +"%H:%M:%S")]: Se ha configurado correctamente"
-                echo -e "[CONFIG][$(date +"%H:%M:%S")]: Verificando si se ha configurado correctamente"
-                grep "txt" /etc/scalpel.conf > /dev/null
+              echo -e "[CONFIG][$(date +"%H:%M:%S")]: Comprobando si se configuró previamente scalpel"
+              if ! grep -Fxq "$linea" /etc/scalpel.conf; then
+                echo -e "[CONFIG][$(date +"%H:%M:%S")]: No se configuró anteriormente, añadiendo la configuración"
+                echo "$linea" | sudo tee -a /etc/scalpel.conf
                 if [ $? -eq 0 ]; then
-                  echo -e "[CONFIG SUCCESS][$(date +"%H:%M:%S")]: La verificación ha tenido éxito"
-                  echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Iniciando la recuperación"
-                  echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Creando la carpeta de archivos recuperados"
-                  mkdir ./recovery
-                  process=$?
-                  if [ $process -eq 0 ]; then
-                    echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
-                    echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
-                    sudo scalpel "$ruta" -o ./recovery
-                    if [ $? -eq 0 ]; then
-                      echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Comprueba si se han recuperado los archivos en ./recovery"
+                  echo -e "[CONFIG SUCCESS][$(date +"%H:%M:%S")]: Se ha configurado correctamente"
+                  echo -e "[CONFIG][$(date +"%H:%M:%S")]: Verificando si se ha configurado correctamente"
+                  grep "txt" /etc/scalpel.conf > /dev/null
+                  if [ $? -eq 0 ]; then
+                    echo -e "[CONFIG SUCCESS][$(date +"%H:%M:%S")]: La verificación ha tenido éxito"
+                    echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Iniciando la recuperación"
+                    echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Creando la carpeta de archivos recuperados"
+                    mkdir ./recovery
+                    process=$?
+                    if [ $process -eq 0 ]; then
+                      echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
+                      echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
+                      sudo scalpel "$ruta" -o ./recovery
+                      if [ $? -eq 0 ]; then
+                        echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Comprueba si se han recuperado los archivos en ./recovery"
+                      else
+                        echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Error al recuperar los archivos"
+                        exit 1
+                      fi
                     else
-                      echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Error al recuperar los archivos"
-                      exit 1
+                      echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Hubo un error al crear la carpeta."
                     fi
                   else
-                    echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Hubo un error al crear la carpeta."
+                    echo -e "[CONFIG ERROR][$(date +"%H:%M:%S")]: Hubo un error al verificar, error en la configuración"
+                    exit 1
                   fi
                 else
-                  echo -e "[CONFIG ERROR][$(date +"%H:%M:%S")]: Hubo un error al verificar, error en la configuración"
+                  echo -e "[CONFIG ERROR][$(date +"%H:%M:%S")]: Error al configurar scapel"
                   exit 1
                 fi
               else
-                echo -e "[CONFIG ERROR][$(date +"%H:%M:%S")]: Error al configurar scapel"
-                exit 1
+                echo -e "[CONFIG][$(date +"%H:%M:%S")]: Nada que hacer, estaba configurado"
+                echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Iniciando la recuperación de los archivos"
+                mkdir ./recovery
+                process=$?
+                if [ $process -eq 0 ]; then
+                  echo -e "[RECOVERY INIT][$(date +"%H:%M:%S")]: Se ha creado la carpeta correctamente"
+                  echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Recuperando archivos..."
+                  
+                  sudo scalpel "$ruta" -o ./recovery
+                  if [ $? -eq 0 ]; then
+                    echo -e "[RECOVERY][$(date +"%H:%M:%S")]: Comprueba si se han recuperado los archivos en ./recovery"
+                  else
+                    echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Error al recuperar los archivos"
+                    exit 1
+                  fi
+                else
+                  echo -e "[RECOVERY ERROR][$(date +"%H:%M:%S")]: Hubo un error al crear la carpeta."
+                fi
               fi
             else
               echo -e "[ERROR][$(date +"%H:%M:%S")]: Error al desmontar el disco"
