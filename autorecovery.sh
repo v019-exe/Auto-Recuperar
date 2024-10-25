@@ -18,7 +18,7 @@ case $DISTRO in
     echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Comprobando si está instalado scalpel."
     if command -v scalpel >/dev/null 2>&1; then
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Ya está instalado"
-      autorecovery
+      return
     else
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Ejecutando apt, instalando scalpel"
       apt install -y scalpel >/dev/null
@@ -29,7 +29,7 @@ case $DISTRO in
     echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Comprobando si está instalado scalpel."
     if command -v scalpel >/dev/null 2>&1; then
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Ya está instalado"
-      autorecovery
+      return
     else
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Instalando scalpel"
       dnf install -y scalpel >/dev/null
@@ -40,7 +40,7 @@ case $DISTRO in
     echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Comprobando si está instalado scalpel."
     if command -v scalpel >/dev/null &>1; then
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Ya está instalado"
-      autorecovery
+      return
     else
       echo -e "[INSTALLER][$(date +"%H:%M:%S")]: Instalando scalpel, ejecutando pacman"
       pacman -S --noconfirm scalpel > /dev/null
@@ -185,4 +185,6 @@ autorecovery() {
     fi
   fi
 }
+
+autorecovery
 
